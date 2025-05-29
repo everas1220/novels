@@ -8,7 +8,6 @@ import com.example.novels.dto.PageRequestDTO;
 import com.example.novels.dto.PageResultDTO;
 import com.example.novels.service.NovelService;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -28,22 +27,25 @@ public class NovelRestController {
 
     private final NovelService novelService;
 
-    // 전체리스트
-
     @PutMapping("/{id}")
-    public Long putdNovel(@RequestBody NovelDTO novelDTO) {
+    public Long putNovel(@RequestBody NovelDTO novelDTO) {
         log.info("수정 {}", novelDTO);
         return novelService.avaUpdate(novelDTO);
     }
 
+    @PutMapping("/edit/{id}")
+    public Long putPubNovel(@RequestBody NovelDTO novelDTO) {
+        log.info("출판일자 수정 {}", novelDTO);
+        return novelService.pubUpdate(novelDTO);
+    }
+
     @PostMapping("/add")
-    public Long postMethodName(@RequestBody NovelDTO novelDTO) {
+    public Long postNovel(@RequestBody NovelDTO novelDTO) {
         log.info("추가 {}", novelDTO);
 
         return novelService.novelInsert(novelDTO);
     }
 
-    @Transactional
     @DeleteMapping("/{id}")
     public Long removeNovel(@PathVariable Long id) {
         log.info("삭제 {}", id);
@@ -51,9 +53,10 @@ public class NovelRestController {
         return id;
     }
 
+    // 전체리스트
     @GetMapping("")
     public PageResultDTO<NovelDTO> getList(PageRequestDTO requestDTO) {
-        log.info("전체 도서 정보 열람 요청{}", requestDTO);
+        log.info("전체 도서 정보 {}", requestDTO);
         PageResultDTO<NovelDTO> result = novelService.getList(requestDTO);
         return result;
     }

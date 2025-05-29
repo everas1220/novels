@@ -35,7 +35,7 @@ public class Novel {
     @Column(nullable = false)
     private String author;
 
-    private LocalDate publishedDate;// 출판일
+    private LocalDate publishedDate; // 출판일
 
     @Column(nullable = false)
     private boolean available;
@@ -48,4 +48,7 @@ public class Novel {
         this.available = available;
     }
 
+    public void changePublishedDate(LocalDate publishedDate) {
+        this.publishedDate = publishedDate;
+    }
 }

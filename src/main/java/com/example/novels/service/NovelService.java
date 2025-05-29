@@ -8,17 +8,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.novels.dto.NovelDTO;
 import com.example.novels.dto.PageRequestDTO;
 import com.example.novels.dto.PageResultDTO;
 import com.example.novels.entity.Genre;
 import com.example.novels.entity.Novel;
-import com.example.novels.repository.GenreRepository;
 import com.example.novels.repository.GradeRepository;
 import com.example.novels.repository.NovelRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -28,7 +27,6 @@ import lombok.extern.log4j.Log4j2;
 public class NovelService {
 
     private final NovelRepository novelRepository;
-    private final GenreRepository genreRepository;
     private final GradeRepository gradeRepository;
 
     public Long avaUpdate(NovelDTO novelDTO) {
@@ -38,17 +36,25 @@ public class NovelService {
         return novelRepository.save(novel).getId();
     }
 
+    public Long pubUpdate(NovelDTO novelDTO) {
+        // publichedDate 변경
+        Novel novel = novelRepository.findById(novelDTO.getId()).get();
+        novel.changePublishedDate(novelDTO.getPublishedDate());
+        return novelRepository.save(novel).getId();
+    }
+
+    @Transactional
     public void novelRemove(Long id) {
         // 자식에 해당하는 grade 삭제
         gradeRepository.deleteByNovel(Novel.builder().id(id).build());
 
         // novel 삭제
         novelRepository.deleteById(id);
-
     }
 
     public Long novelInsert(NovelDTO novelDTO) {
         // novel 추가
+
         Novel novel = Novel.builder()
                 .title(novelDTO.getTitle())
                 .author(novelDTO.getAuthor())
@@ -81,12 +87,11 @@ public class NovelService {
                     .rating(rating != null ? rating.intValue() : 0)
                     .build();
             return novelDTO;
+
         }).collect(Collectors.toList());
-        Long totalCount = result.getTotalElements();
-        return PageResultDTO.<NovelDTO>withAll()
-                .dtoList(dtoList)
-                .totalCount(totalCount)
-                .pageRequestDTO(pageRequestDTO)
+
+        long totalCount = result.getTotalElements();
+        return PageResultDTO.<NovelDTO>withAll().dtoList(dtoList).totalCount(totalCount).pageRequestDTO(pageRequestDTO)
                 .build();
     }
 
@@ -113,4 +118,5 @@ public class NovelService {
                 .build();
         return novelDTO;
     }
+
 }

@@ -9,8 +9,9 @@ import com.example.novels.entity.Novel;
 
 public interface GradeRepository extends JpaRepository<Grade, Long> {
 
-    // Novel 을 이용해서 Grade 제거
+    // Novel 이용해서 grade 제거
     @Modifying
     @Query("DELETE FROM Grade g WHERE g.novel = :novel")
     void deleteByNovel(Novel novel);
+
 }

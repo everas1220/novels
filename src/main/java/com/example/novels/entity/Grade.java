@@ -22,9 +22,9 @@ import lombok.ToString;
 @Entity
 public class Grade {
 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grade_id")
-    @Id
     private Long id;
 
     @Column(nullable = false)
@@ -37,5 +37,4 @@ public class Grade {
     @JoinColumn(name = "member_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
-
 }

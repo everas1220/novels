@@ -2,8 +2,6 @@ package com.example.novels.dto;
 
 import java.time.LocalDate;
 
-import com.example.novels.entity.Genre;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,10 +11,10 @@ import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@Builder
 @Getter
 @Setter
+@Builder
+@ToString
 public class NovelDTO {
 
     private Long id;
@@ -32,4 +30,5 @@ public class NovelDTO {
 
     // 평점
     private int rating;
+
 }

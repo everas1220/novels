@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import com.example.novels.entity.Novel;
@@ -43,6 +42,7 @@ public class SearchNovelRepositoryImpl extends QuerydslRepositorySupport impleme
                 .from(grade)
                 .where(grade.novel.eq(novel))
                 .groupBy(grade.novel);
+
         JPQLQuery<Tuple> tuple = query.select(novel, genre, ratingAvg);
         Tuple result = tuple.fetchFirst();
         return result.toArray();
@@ -61,12 +61,14 @@ public class SearchNovelRepositoryImpl extends QuerydslRepositorySupport impleme
                 .from(grade)
                 .where(grade.novel.eq(novel))
                 .groupBy(grade.novel);
+
         JPQLQuery<Tuple> tuple = query.select(novel, genre, ratingAvg);
 
-        // 검색
         BooleanBuilder builder = new BooleanBuilder();
         BooleanExpression expression = novel.id.gt(0);
         builder.and(expression);
+
+        // 검색
 
         tuple.where(builder);
         // Sort 생성
@@ -91,5 +93,7 @@ public class SearchNovelRepositoryImpl extends QuerydslRepositorySupport impleme
 
         return new PageImpl<>(result.stream().map(t -> t.toArray()).collect(Collectors.toList()), pageable,
                 totalCnt);
+
     }
+
 }
